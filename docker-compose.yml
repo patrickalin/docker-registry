@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   registry:
-    image: registry:2.6.2
+    image: registry.services.alin.be/registry-image:v1
     deploy:
       replicas: 1
       resources:
@@ -22,20 +22,21 @@ services:
 #      REGISTRY_AUTH: htpasswd
 #      REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
 #      REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+#    ports:
+#      - 5000:5000
     volumes:
       - ./registry/data:/var/lib/registry
-      - ./registry/certs:/certs
-      - ./registry/auth:/auth
-      - ./config.yml:/etc/docker/registry/config.yml
 
   registry-ui:
-    image: snagles/docker-registry-manager
+    image: registry.services.alin.be/registry-ui-image:v1
+    depends_on:
+      - registry
     deploy:
       replicas: 1
       resources:
         limits:
-          cpus: "0.1"
-          memory: 50M
+          cpus: "1"
+          memory: 100M
       restart_policy:
         condition: on-failure
       labels:
@@ -43,8 +44,9 @@ services:
         - traefik.frontend.rule=Host:registry-ui.services.alin.be
         - traefik.frontend.entryPoints=http,https
         - traefik.backend.loadbalancer.method=wrr
+        - traefik.frontend.auth.basic=admin:$$apr1$$gWiqD1WO$$kJ1Im7XyH2pH5V/D/DmcL.
     volumes:
-      - ./registries.yml:/app/registries.yml
+      - ./registry-ui/registries.yml:/app/registries.yml
       #- ./ssl.crt:/app/ssl.crt # https certfile location
       #- ./ssl.key:/app/ssl.key # https keyfile location
     environment:
@@ -56,7 +58,9 @@ services:
       #- MANAGER_CERTIFICATE=/app/ssl.key
 
   registry-ui2:
-    image: konradkleine/docker-registry-frontend:v2
+    image: registry.services.alin.be/registry-ui2-image:v1
+    depends_on:
+      - registry
     deploy:
       replicas: 1
       resources:

@@ -18,7 +18,11 @@ fi
 case "$OPTION" in
 
 1)  cd $IMAGE
-    docker build -t $IMAGE .
+    docker build -t registry.services.alin.be/$IMAGE:v1 .
+    cd ../registry-ui-image
+    docker build -t registry.services.alin.be/registry-ui-image:v1 .
+    cd ../registry-ui2-image
+    docker build -t registry.services.alin.be/registry-ui2-image:v1 .
     ;;
 2)  docker stack remove  $SERVICE
     sleep 3

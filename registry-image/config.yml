@@ -2,9 +2,10 @@ version: 0.1
 log:
   fields:
     service: registry
+  level: debug
 storage:
-  cache:
-    blobdescriptor: inmemory
+#  cache:
+#    blobdescriptor: inmemory
   filesystem:
     rootdirectory: /var/lib/registry
   delete:
@@ -24,3 +25,7 @@ health:
     enabled: true
     interval: 10s
     threshold: 3
+#proxy:
+#  remoteurl: https://registry-1.docker.io
+#  username: "patrickalin"
+#  password: "b7rKRgbhrFHj"
