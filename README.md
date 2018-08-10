@@ -1,3 +1,11 @@
-# docker-registry
+# Tag, registry
 
-Don't forget to modify the config.yml with the cross orgin for the frontend.
+Edit ./env.sh
+
+# Build container 
+
+./build.sh
+
+# Deploy 
+
+./deploy.sh

@@ -1,33 +1,41 @@
 #!/bin/bash
+# v1.0
 
-SERVICE="$(basename `pwd` | cut -d'-' -f 2)"
-IMAGE="$SERVICE-image"
+DIRECTORY="$(cd "$(dirname "$0")" && pwd)"
+cd "$DIRECTORY" || exit
 
-OPTION=$(whiptail --title $SERVICE --menu "Choose your option" 15 60 4 \
-"1" "Build $SERVICE" \
-"2" "(Re)Start service $SERVICE" \
-"3" "Stop service $SERVICE" 3>&1 1>&2 2>&3)
- 
-exitstatus=$?
-if [ $exitstatus = 0 ]; then
-    echo "Your chosen option:" $OPTION
-else
-    echo "You chose Cancel."
-fi
+source ./env.sh
 
-case "$OPTION" in
+HEIGHT=15
+WIDTH=40
+CHOICE_HEIGHT=4
+BACKTITLE="Build docker and deploy docker-compose   "
+TITLE="Build and deploy : : $SERVICE"
+MENU="Choose one of the following options:"
 
-1)  cd $IMAGE
-    docker build -t registry.services.alin.be/$IMAGE:v1 .
-    cd ../registry-ui-image
-    docker build -t registry.services.alin.be/registry-ui-image:v1 .
-    cd ../registry-ui2-image
-    docker build -t registry.services.alin.be/registry-ui2-image:v1 .
-    ;;
-2)  docker stack remove  $SERVICE
-    sleep 3
-    docker stack deploy --compose-file docker-compose.yml $SERVICE
-    ;;
-3)  docker stack remove  $SERVICE
-    ;;
+OPTIONS=(1 "Build"
+         2 "Undeploy"
+         3 "Deploy")
+
+CHOICE=$(dialog --clear \
+                --backtitle "$BACKTITLE" \
+                --title "$TITLE" \
+                --menu "$MENU" \
+                $HEIGHT $WIDTH $CHOICE_HEIGHT \
+                "${OPTIONS[@]}" \
+                2>&1 >/dev/tty)
+
+clear
+
+
+
+case $CHOICE in
+        1)  ./build.sh
+            ;;
+        2)  source ./env.sh
+            docker stack remove  "$SERVICE"
+            ;;
+        3)  source ./env.sh
+            docker stack deploy --compose-file docker-compose.yml "$SERVICE"
+            ;;
 esac

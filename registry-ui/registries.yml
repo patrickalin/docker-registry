@@ -1,9 +1,0 @@
-registries:
-  exampleRegistry:
-    url: http://registry.services.alin.be
-    port: 80 # Example: 443, 8080, 5000
-    username: admin
-    password: b7rKRgbhrFHj
-    refresh-rate: "5m" # Example: 60s, 5m, 1h
-    skip-tls-validation: true # REQUIRED for self signed certificates
-    dockerhub-integration: true # Optional - compares to dockerhub to determine if image up to date
