@@ -74,7 +74,7 @@ function buildImage {
     then
         TO_FQDN="$REGISTRY_TO${REGISTRY_TO:+/}$IMAGE_TO:$TAG_TO"
     else
-        TO_FQDN="$IMAGE_TO:$TAG_TO"
+        TO_FQDN="local/$IMAGE_TO:$TAG_TO"
     fi
     echoGreen "To : $TO_FQDN"
     FROM_REGISTRY_FQDN="$REGISTRY_TO${REGISTRY_TO:+/}$IMAGE_FROM:$TAG_FROM"
@@ -103,12 +103,10 @@ function buildImage {
         docker push 		"$TO_FQDN"
         echoBlue "Remove : image no more use";
         docker rmi "$TO_FQDN"
+        docker rmi "$FROM_FQDN"
         line
     fi
-    line
-    
-    echoBlue "Remove : image no more use";
-    docker rmi "$FROM_FQDN"
+
     line
     
     echoBlue "List images"
