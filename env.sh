@@ -1,9 +1,9 @@
 #!/bin/bash
 
-export REGISTRY="registry.services.alin.be"
+export REGISTRY="local"
 echo $REGISTRY
 
-export IMAGE_REGISTRY="local/registry"
+export IMAGE_REGISTRY="registry"
 export TAG_REGISTRY=2.6.2
 echo $IMAGE_REGISTRY
 echo $TAG_REGISTRY
